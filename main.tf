@@ -19,14 +19,18 @@ provider "aws" {
   alias  = "dev"
 }
 
-resource "random_pet" "petname" {
+resource "random_pet" "petname_dev" {
   length    = 3
   separator = "-"
 }
 
+resource "random_pet" "petname_prod" {
+  length    = 3
+  separator = "-"
+}
 resource "aws_s3_bucket" "dev" {
   provider = aws.dev
-  bucket   = "${var.dev_prefix}-${random_pet.petname.id}"
+  bucket   = "${var.dev_prefix}-${random_pet.petname_dev.id}"
   acl      = "public-read"
 
   policy = <<EOF
@@ -41,7 +45,7 @@ resource "aws_s3_bucket" "dev" {
                 "s3:GetObject"
             ],
             "Resource": [
-                "arn:aws:s3:::${var.dev_prefix}-${random_pet.petname.id}/*"
+                "arn:aws:s3:::${var.dev_prefix}-${random_pet.petname_dev.id}/*"
             ]
         }
     ]
@@ -67,7 +71,7 @@ resource "aws_s3_bucket_object" "dev" {
 }
 
 resource "aws_s3_bucket" "prod" {
-  bucket = "${var.prod_prefix}-${random_pet.petname.id}"
+  bucket = "${var.prod_prefix}-${random_pet.petname_prod.id}"
   acl    = "public-read"
 
   policy = <<EOF
@@ -82,7 +86,7 @@ resource "aws_s3_bucket" "prod" {
                 "s3:GetObject"
             ],
             "Resource": [
-                "arn:aws:s3:::${var.prod_prefix}-${random_pet.petname.id}/*"
+                "arn:aws:s3:::${var.prod_prefix}-${random_pet.petname_prod.id}/*"
             ]
         }
     ]
