@@ -1,19 +1,3 @@
-variable "prod_region" {
-  description = "This is where your EC2 instance will be deployed."
-}
-
-variable "dev_region" {
-  description = "This is where your EC2 instance will be deployed."
-}
-
-variable "dev_prefix" {
-  default = "dev"
-}
-
-variable "prod_prefix" {
-  default = "prod"
-}
-
 provider "aws" {
   region = var.dev_region
   alias  = "dev"
@@ -108,13 +92,4 @@ resource "aws_s3_bucket_object" "prod" {
   content      = file("${path.module}/assets/index.html")
   content_type = "text/html"
 
-}
-
-
-output "dev_website_endpoint" {
-  value = "http://${aws_s3_bucket.dev.website_endpoint}/index.html"
-}
-
-output "prod_website_endpoint" {
-  value = "http://${aws_s3_bucket.prod.website_endpoint}/index.html"
 }
